@@ -1,0 +1,14 @@
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /properties
+Disallow: /agents
+Disallow: /cooperation-requests
+Sitemap: https://sowlfa.online/sitemap.xml
+
+Sitemap: https://sowlfa.online/blog/sitemap.xml

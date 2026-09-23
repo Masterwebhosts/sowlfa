@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Office;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminOfficeController extends Controller
 {
@@ -37,11 +38,28 @@ class AdminOfficeController extends Controller
 
         $data['status'] = 'active';
 
-        Office::create($data);
+        $baseSlug = Str::slug($data['name']);
+
+        if ($baseSlug === '') {
+            $baseSlug = 'office';
+        }
+
+        $slug = $baseSlug;
+        $counter = 2;
+
+        while (Office::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        $data['slug'] = $slug;
+
+        $office = Office::create($data);
 
         return redirect()
             ->route('admin.offices.index')
-            ->with('success', 'تم إنشاء المكتب بنجاح.');
+            ->with('success', 'تم إنشاء المكتب بنجاح.')
+            ->with('office_url', route('offices.show', $office->slug));
     }
 
     public function edit(Office $office)

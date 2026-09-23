@@ -11,14 +11,15 @@ class Office extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'address',
-        'city',
-        'country',
-        'status',
-    ];
+    'name',
+    'slug',
+    'email',
+    'phone',
+    'address',
+    'city',
+    'country',
+    'status',
+];
 
     public function users(): HasMany
     {

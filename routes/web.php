@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\AdminController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PublicPageController;
@@ -92,7 +92,12 @@ Route::get('/faq', [PublicPageController::class, 'faq'])
 Route::get('/sitemap.xml', [PublicPageController::class, 'sitemap'])
     ->name('public.sitemap');
 
+Route::get('/offices', [OfficeController::class, 'index'])
+    ->name('offices.index');
 
+Route::get('/offices/{office:slug}', [OfficeController::class, 'show'])
+    ->name('offices.show');
+    
 /*
 |--------------------------------------------------------------------------
 | Authenticated Users
