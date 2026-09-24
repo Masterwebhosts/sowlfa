@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
+    /**
+     * عرض تفاصيل العقار.
+     *
+     * يمكن للمستخدم مشاهدة أي عقار منشور على المنصة،
+     * حتى لو كان تابعًا لمكتب آخر.
+     */
     public function show(Property $property)
     {
         $property->load([
@@ -23,12 +29,31 @@ class PropertyController extends Controller
         );
     }
 
+    /**
+     * عرض عقارات مكتب المستخدم.
+     *
+     * /properties
+     *
+     * المستخدم العادي يرى عقارات مكتبه فقط.
+     * الـ admin يرى جميع العقارات.
+     */
     public function index()
     {
-        $properties = Property::with([
+        $user = Auth::user();
+
+        $query = Property::with([
             'office',
             'agent',
-        ])
+        ]);
+
+        if ($user->role !== 'admin') {
+            $query->where(
+                'office_id',
+                $user->office_id
+            );
+        }
+
+        $properties = $query
             ->latest()
             ->paginate(12);
 
@@ -38,74 +63,107 @@ class PropertyController extends Controller
         );
     }
 
+    /**
+     * البحث في عقارات المنصة بالكامل.
+     *
+     * /properties/search
+     *
+     * هنا لا نضع office_id لأن البحث يجب أن يشمل
+     * عقارات جميع المكاتب.
+     */
     public function search(Request $request)
     {
-        $hasSearchCriteria =
-            $request->filled('property_type')
-            || $request->filled('listing_type')
-            || $request->filled('country')
-            || $request->filled('city')
-            || $request->filled('price_min')
-            || $request->filled('price_max');
+        $query = Property::with([
+            'office',
+            'agent',
+        ]);
 
-        $properties = collect();
+        /*
+         * البحث في العقارات المتاحة فقط.
+         */
+        $query->where(
+            'status',
+            'available'
+        );
 
-        if ($hasSearchCriteria) {
-
-            $query = Property::with([
-                'office',
-                'agent',
-            ]);
-
-            if ($request->filled('property_type')) {
-                $query->where(
-                    'property_type',
-                    $request->input('property_type')
-                );
-            }
-
-            if ($request->filled('listing_type')) {
-                $query->where(
-                    'listing_type',
-                    $request->input('listing_type')
-                );
-            }
-
-            if ($request->filled('country')) {
-                $query->where(
-                    'country',
-                    $request->input('country')
-                );
-            }
-
-            if ($request->filled('city')) {
-                $query->where(
-                    'city',
-                    $request->input('city')
-                );
-            }
-
-            if ($request->filled('price_min')) {
-                $query->where(
-                    'price',
-                    '>=',
-                    $request->input('price_min')
-                );
-            }
-
-            if ($request->filled('price_max')) {
-                $query->where(
-                    'price',
-                    '<=',
-                    $request->input('price_max')
-                );
-            }
-
-            $properties = $query
-                ->latest()
-                ->paginate(12)
-                ->withQueryString();
+        /*
+         * نوع العقار.
+         */
+        if ($request->filled('property_type')) {
+            $query->where(
+                'property_type',
+                $request->input('property_type')
+            );
         }
+
+        /*
+         * نوع العرض:
+         * إيجار / بيع
+         */
+        if ($request->filled('listing_type')) {
+            $query->where(
+                'listing_type',
+                $request->input('listing_type')
+            );
+        }
+
+        /*
+         * الدولة.
+         */
+        if ($request->filled('country')) {
+            $query->where(
+                'country',
+                'like',
+                '%' . trim($request->input('country')) . '%'
+            );
+        }
+
+        /*
+         * المدينة.
+         */
+        if ($request->filled('city')) {
+            $query->where(
+                'city',
+                'like',
+                '%' . trim($request->input('city')) . '%'
+            );
+        }
+
+        /*
+         * الحد الأدنى للسعر.
+         */
+        if (
+            $request->filled('price_min')
+            && is_numeric($request->input('price_min'))
+        ) {
+            $query->where(
+                'price',
+                '>=',
+                $request->input('price_min')
+            );
+        }
+
+        /*
+         * الحد الأعلى للسعر.
+         */
+        if (
+            $request->filled('price_max')
+            && is_numeric($request->input('price_max'))
+        ) {
+            $query->where(
+                'price',
+                '<=',
+                $request->input('price_max')
+            );
+        }
+
+        /*
+         * عرض النتائج من جميع المكاتب.
+         */
+        $properties = $query
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
 
         return view(
             'properties.search',
@@ -113,12 +171,21 @@ class PropertyController extends Controller
         );
     }
 
+    /**
+     * صفحة إضافة عقار.
+     */
     public function create()
     {
         $officeId = Auth::user()->office_id;
 
-        $agents = Agent::where('office_id', $officeId)
-            ->where('status', 'active')
+        $agents = Agent::where(
+            'office_id',
+            $officeId
+        )
+            ->where(
+                'status',
+                'active'
+            )
             ->orderBy('name')
             ->get();
 
@@ -128,6 +195,9 @@ class PropertyController extends Controller
         );
     }
 
+    /**
+     * إنشاء عقار جديد.
+     */
     public function store(Request $request)
     {
         $officeId = Auth::user()->office_id;
@@ -222,11 +292,23 @@ class PropertyController extends Controller
             ],
         ]);
 
+        /*
+         * التأكد أن الوسيط تابع لنفس مكتب المستخدم
+         * وأن حالته active.
+         */
         if (!empty($data['agent_id'])) {
-
-            $agentExists = Agent::where('id', $data['agent_id'])
-                ->where('office_id', $officeId)
-                ->where('status', 'active')
+            $agentExists = Agent::where(
+                'id',
+                $data['agent_id']
+            )
+                ->where(
+                    'office_id',
+                    $officeId
+                )
+                ->where(
+                    'status',
+                    'active'
+                )
                 ->exists();
 
             if (!$agentExists) {
@@ -238,6 +320,9 @@ class PropertyController extends Controller
             }
         }
 
+        /*
+         * ربط العقار بمكتب المستخدم الحالي.
+         */
         $data['office_id'] = $officeId;
 
         Property::create($data);
@@ -247,6 +332,34 @@ class PropertyController extends Controller
             ->with(
                 'success',
                 'تم إنشاء العقار بنجاح.'
+            );
+    }
+
+    /**
+     * حذف العقار.
+     *
+     * مسموح فقط:
+     * - للـ admin
+     * - أو لمستخدم من نفس مكتب العقار.
+     */
+    public function destroy(Property $property)
+    {
+        $user = Auth::user();
+
+        if (
+            $user->role !== 'admin'
+            && $property->office_id !== $user->office_id
+        ) {
+            abort(403);
+        }
+
+        $property->delete();
+
+        return redirect()
+            ->route('properties.index')
+            ->with(
+                'success',
+                'تم حذف العقار بنجاح.'
             );
     }
 }
