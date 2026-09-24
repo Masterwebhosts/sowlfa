@@ -288,6 +288,9 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/properties', [PropertyController::class, 'store'])
             ->name('properties.store');
+ 
+        Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])
+            ->name('properties.destroy');
 
         Route::get(
             '/properties/search',
