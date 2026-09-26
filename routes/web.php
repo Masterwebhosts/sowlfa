@@ -13,7 +13,68 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PublicPageController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\AccountActivationController;
 
+/*
+|--------------------------------------------------------------------------
+| Account Activation
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/activate-account/{token}',
+    [AccountActivationController::class, 'show']
+)->name('account.activation.show');
+
+Route::post(
+    '/activate-account',
+    [AccountActivationController::class, 'activate']
+)
+    ->middleware('throttle:6,1')
+    ->name('account.activation.store');
+/*
+|--------------------------------------------------------------------------
+| Email Verification
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/email/verify',
+        function () {
+            return view('auth.verify-email');
+        }
+    )->name('verification.notice');
+
+    Route::get(
+        '/email/verify/{id}/{hash}',
+        function (EmailVerificationRequest $request) {
+            $request->fulfill();
+
+            return redirect()
+                ->route('dashboard')
+                ->with('success', 'تم التحقق من بريدك الإلكتروني بنجاح.');
+        }
+    )
+        ->middleware('signed')
+        ->name('verification.verify');
+
+    Route::post(
+        '/email/verification-notification',
+        function (Request $request) {
+            $request->user()->sendEmailVerificationNotification();
+
+            return back()->with(
+                'status',
+                'تم إرسال رابط تحقق جديد إلى بريدك الإلكتروني.'
+            );
+        }
+    )
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+});
 /*
 |--------------------------------------------------------------------------
 | Authentication
@@ -112,13 +173,11 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('subscriber')->group(function () {
+    Route::middleware(['subscriber', 'verified'])->group(function () {
 
-        Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('dashboard');
-    });
-
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+});
     /*
     |--------------------------------------------------------------------------
     | Admin Panel
@@ -256,7 +315,7 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('subscription')->group(function () {
+    Route::middleware(['subscription', 'verified'])->group(function () {
 
         /*
         |--------------------------------------------------------------------------

@@ -1,72 +1,170 @@
 @extends('public.layouts.app')
 
-@section(
-'title',
-'الاشتراك في SOWLFA | ابدأ استخدام المنصة'
-)
+@section('title', 'الاشتراك في SOWLFA | ابدأ استخدام المنصة')
 
 @section(
 'meta_description',
-'ابدأ الاشتراك في SOWLFA للمكاتب والوسطاء العقاريين واستفد من قاعدة البيانات العقارية والبحث وطلبات التعاون بين المكاتب.'
+'ابدأ الاشتراك في SOWLFA للمكاتب والوسطاء العقاريين واختر خطة الاشتراك المناسبة لمكتبك.'
 )
 
-@section(
-'og_title',
-'الاشتراك في SOWLFA'
-)
+@section('og_title', 'الاشتراك في SOWLFA')
 
 @section(
 'og_description',
-'ابدأ استخدام SOWLFA واختر خطة الاشتراك المناسبة لمكتبك.'
+'اختر خطة الاشتراك المناسبة لمكتبك وابدأ استخدام منصة SOWLFA.'
 )
 
 @section('content')
+{{-- =========================================================
+Header
+========================================================= --}}
 
 <section
     style="
-        padding: 70px 0 50px;
-        background: #f5f6f8;
+        position: relative;
+        padding: 90px 0 85px;
+        overflow: hidden;
+        background:
+            radial-gradient(
+                circle at 15% 20%,
+                rgba(59, 130, 246, 0.18),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at 85% 20%,
+                rgba(139, 92, 246, 0.16),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #f8fafc 0%,
+                #eef2ff 45%,
+                #f5f3ff 100%
+            );
         text-align: center;
+        border-bottom: 1px solid #e5e7eb;
     "
 >
     <div class="container">
 
+        <div
+            style="
+                max-width: 850px;
+                margin: 0 auto;
+            "
+        >
 
-    <h1>
-        ابدأ الاشتراك في SOWLFA
-    </h1>
+            <div
+                style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px 16px;
+                    margin-bottom: 20px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.85);
+                    border: 1px solid #dbeafe;
+                    color: #1d4ed8;
+                    font-size: 14px;
+                    font-weight: 700;
+                    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.06);
+                "
+            >
+                <span style="font-size: 16px;">✦</span>
+                خطط اشتراك مرنة للمكاتب العقارية
+            </div>
 
-    <p
-        style="
-            max-width: 760px;
-            margin: 18px auto 0;
-            font-size: 19px;
-            color: #555;
-        "
-    >
-        اختر الخطة المناسبة لمكتبك وابدأ باستخدام
-        أدوات البحث عن العقارات والتعاون بين المكاتب.
-    </p>
+            <h1
+                style="
+                    margin: 0;
+                    font-size: clamp(34px, 5vw, 54px);
+                    line-height: 1.2;
+                    font-weight: 800;
+                    color: #0f172a;
+                "
+            >
+                ابدأ الاشتراك في
+                <span style="color: #2563eb;">
+                    SOWLFA
+                </span>
+            </h1>
 
-</div>
+            <p
+                style="
+                    max-width: 760px;
+                    margin: 22px auto 0;
+                    font-size: 20px;
+                    color: #475569;
+                    line-height: 1.9;
+                "
+            >
+                اختر الخطة المناسبة لمكتبك وابدأ باستخدام
+                أدوات البحث عن العقارات والتعاون بين المكاتب.
+            </p>
 
+            <div
+                style="
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                    margin-top: 28px;
+                "
+            >
+                <span
+                    style="
+                        padding: 9px 16px;
+                        border-radius: 10px;
+                        background: rgba(255, 255, 255, 0.8);
+                        border: 1px solid #e2e8f0;
+                        color: #334155;
+                        font-size: 14px;
+                    "
+                >
+                    🔎 البحث عن العقارات
+                </span>
 
+                <span
+                    style="
+                        padding: 9px 16px;
+                        border-radius: 10px;
+                        background: rgba(255, 255, 255, 0.8);
+                        border: 1px solid #e2e8f0;
+                        color: #334155;
+                        font-size: 14px;
+                    "
+                >
+                    🤝 التعاون بين المكاتب
+                </span>
+
+                <span
+                    style="
+                        padding: 9px 16px;
+                        border-radius: 10px;
+                        background: rgba(255, 255, 255, 0.8);
+                        border: 1px solid #e2e8f0;
+                        color: #334155;
+                        font-size: 14px;
+                    "
+                >
+                    🏢 إدارة المكتب
+                </span>
+            </div>
+
+        </div>
+
+    </div>
 </section>
 
-<section
-    style="
-        padding: 60px 0;
-    "
->
+{{-- =========================================================
+How it works
+========================================================= --}}
+
+<section style="padding: 60px 0;">
     <div class="container">
 
 
-    <div
-        style="
-            max-width: 850px;
-            margin: 0 auto;
-        "
-    >
+    <div style="max-width: 850px; margin: 0 auto;">
 
         <h2>
             كيف تبدأ؟
@@ -92,11 +190,10 @@
                 </h3>
 
                 <p>
-                    اختر الخطة المناسبة لعدد الوسطاء
-                    الذين يعملون ضمن مكتبك.
+                    اختر الخطة المناسبة لمكتبك وعدد الوسطاء
+                    الذين تريد إضافتهم إلى المنصة.
                 </p>
             </div>
-
 
             <div
                 style="
@@ -114,7 +211,6 @@
                     تفاصيل بدء الاشتراك وإنشاء حساب المكتب.
                 </p>
             </div>
-
 
             <div
                 style="
@@ -143,121 +239,343 @@
 
 </section>
 
+{{-- =========================================================
+Subscription Plans
+========================================================= --}}
+
 <section
     style="
-        padding: 60px 0;
-        background: #f5f6f8;
+        padding: 70px 0;
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc 0%,
+                #eef2ff 50%,
+                #f8fafc 100%
+            );
     "
 >
     <div class="container">
 
-
-    <h2 style="text-align: center;">
-        خطط الاشتراك
-    </h2>
-
-    <div
-        style="
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(220px, 1fr)
-            );
-            gap: 20px;
-            margin-top: 30px;
-        "
-    >
-
         <div
             style="
-                padding: 24px;
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 10px;
+                max-width: 760px;
+                margin: 0 auto;
                 text-align: center;
             "
         >
-            <h3>
-                أساسية
-            </h3>
+            <h2 style="margin-bottom: 12px;">
+                خطط الاشتراك
+            </h2>
 
             <p
                 style="
-                    font-size: 30px;
-                    font-weight: bold;
+                    margin: 0;
+                    color: #64748b;
+                    line-height: 1.8;
                 "
             >
-                $10
-            </p>
-
-            <p>
-                حتى 3 وسطاء
+                اختر الخطة المناسبة لمكتبك حسب عدد الوسطاء
+                الذين تريد إضافتهم إلى المنصة.
             </p>
         </div>
 
-
         <div
             style="
-                padding: 24px;
-                background: #ffffff;
-                border: 2px solid #222;
-                border-radius: 10px;
-                text-align: center;
+                display: grid;
+                grid-template-columns: repeat(
+                    auto-fit,
+                    minmax(240px, 1fr)
+                );
+                gap: 24px;
+                margin-top: 38px;
             "
         >
-            <h3>
-                متقدمة
-            </h3>
 
-            <p
+            {{-- الأساسية --}}
+
+            <div
                 style="
-                    font-size: 30px;
-                    font-weight: bold;
+                    position: relative;
+                    padding: 32px 26px;
+                    background: linear-gradient(
+                        180deg,
+                        #ffffff 0%,
+                        #f0fdf4 100%
+                    );
+                    border: 1px solid #bbf7d0;
+                    border-radius: 18px;
+                    text-align: center;
+                    box-shadow: 0 10px 30px rgba(22, 101, 52, 0.08);
+                    transition: transform 0.2s ease;
                 "
             >
-                $30
-            </p>
 
-            <p>
-                حتى 20 وسيطًا
-            </p>
-        </div>
+                <div
+                    style="
+                        display: inline-block;
+                        padding: 7px 14px;
+                        margin-bottom: 14px;
+                        border-radius: 999px;
+                        background: #dcfce7;
+                        color: #166534;
+                        font-size: 13px;
+                        font-weight: 700;
+                    "
+                >
+                    اقتصادية
+                </div>
+
+                <h3
+                    style="
+                        margin: 8px 0 0;
+                        color: #166534;
+                    "
+                >
+                    الأساسية
+                </h3>
+
+                <p
+                    style="
+                        font-size: 34px;
+                        font-weight: 800;
+                        margin: 18px 0 8px;
+                        color: #14532d;
+                    "
+                >
+                    مجانية
+                </p>
+
+                <p
+                    style="
+                        margin: 0 0 22px;
+                        color: #64748b;
+                    "
+                >
+                    بدون وسطاء
+                </p>
+
+                <div
+                    style="
+                        height: 1px;
+                        background: #bbf7d0;
+                        margin: 20px 0;
+                    "
+                ></div>
+
+                <p style="margin: 10px 0; color: #334155;">
+                    بدون وسطاء
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    الوصول إلى قاعدة البيانات العقارية
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    البحث عن العقارات
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    إرسال واستقبال طلبات التعاون
+                </p>
+
+            </div>
 
 
-        <div
-            style="
-                padding: 24px;
-                background: #ffffff;
-                border: 1px solid #e5e7eb;
-                border-radius: 10px;
-                text-align: center;
-            "
-        >
-            <h3>
-                غير محدودة
-            </h3>
+            {{-- المتقدمة --}}
 
-            <p
+            <div
                 style="
-                    font-size: 30px;
-                    font-weight: bold;
+                    position: relative;
+                    padding: 32px 26px;
+                    background: linear-gradient(
+                        180deg,
+                        #ffffff 0%,
+                        #eff6ff 100%
+                    );
+                    border: 2px solid #2563eb;
+                    border-radius: 18px;
+                    text-align: center;
+                    box-shadow: 0 16px 38px rgba(37, 99, 235, 0.16);
+                    transform: translateY(-6px);
                 "
             >
-                $100
-            </p>
 
-            <p>
-                عدد غير محدود من الوسطاء
-            </p>
+                <div
+                    style="
+                        position: absolute;
+                        top: -14px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        padding: 7px 18px;
+                        border-radius: 999px;
+                        background: #2563eb;
+                        color: #ffffff;
+                        font-size: 13px;
+                        font-weight: 700;
+                        white-space: nowrap;
+                    "
+                >
+                    الأكثر استخدامًا
+                </div>
+
+                <h3
+                    style="
+                        margin: 10px 0 0;
+                        color: #1d4ed8;
+                    "
+                >
+                    المتقدمة
+                </h3>
+
+                <p
+                    style="
+                        font-size: 34px;
+                        font-weight: 800;
+                        margin: 18px 0 8px;
+                        color: #1e3a8a;
+                    "
+                >
+                    $49.00
+                </p>
+
+                <p
+                    style="
+                        margin: 0 0 22px;
+                        color: #64748b;
+                    "
+                >
+                    / شهر
+                </p>
+
+                <div
+                    style="
+                        height: 1px;
+                        background: #bfdbfe;
+                        margin: 20px 0;
+                    "
+                ></div>
+
+                <p style="margin: 10px 0; color: #1e40af; font-weight: 700;">
+                    حتى 10 وسطاء
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    الوصول إلى قاعدة البيانات العقارية
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    البحث عن العقارات
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    إرسال واستقبال طلبات التعاون
+                </p>
+
+            </div>
+
+
+            {{-- الذهبية --}}
+
+            <div
+                style="
+                    position: relative;
+                    padding: 32px 26px;
+                    background: linear-gradient(
+                        180deg,
+                        #ffffff 0%,
+                        #fffbeb 100%
+                    );
+                    border: 1px solid #fde68a;
+                    border-radius: 18px;
+                    text-align: center;
+                    box-shadow: 0 10px 30px rgba(161, 98, 7, 0.08);
+                "
+            >
+
+                <div
+                    style="
+                        display: inline-block;
+                        padding: 7px 14px;
+                        margin-bottom: 14px;
+                        border-radius: 999px;
+                        background: #fef3c7;
+                        color: #92400e;
+                        font-size: 13px;
+                        font-weight: 700;
+                    "
+                >
+                    للأعمال الكبيرة
+                </div>
+
+                <h3
+                    style="
+                        margin: 8px 0 0;
+                        color: #92400e;
+                    "
+                >
+                    الذهبية
+                </h3>
+
+                <p
+                    style="
+                        font-size: 34px;
+                        font-weight: 800;
+                        margin: 18px 0 8px;
+                        color: #78350f;
+                    "
+                >
+                    $99.00
+                </p>
+
+                <p
+                    style="
+                        margin: 0 0 22px;
+                        color: #64748b;
+                    "
+                >
+                    / شهر
+                </p>
+
+                <div
+                    style="
+                        height: 1px;
+                        background: #fde68a;
+                        margin: 20px 0;
+                    "
+                ></div>
+
+                <p
+                    style="
+                        margin: 10px 0;
+                        color: #92400e;
+                        font-weight: 700;
+                    "
+                >
+                    وسطاء غير محدودين
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    الوصول إلى قاعدة البيانات العقارية
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    البحث عن العقارات
+                </p>
+
+                <p style="margin: 10px 0; color: #475569;">
+                    إرسال واستقبال طلبات التعاون
+                </p>
+
+            </div>
+
         </div>
 
     </div>
-
-</div>
-
 </section>
-
-{{-- WhatsApp Subscription Form --}}
+{{-- =========================================================
+WhatsApp Subscription Request
+========================================================= --}}
 
 <section
     style="
@@ -266,7 +584,6 @@
     "
 >
     <div class="container">
-
 
     <div
         style="
@@ -279,7 +596,12 @@
         "
     >
 
-        <div style="text-align: center; margin-bottom: 30px;">
+        <div
+            style="
+                text-align: center;
+                margin-bottom: 30px;
+            "
+        >
 
             <h2>
                 طلب الاشتراك عبر واتساب
@@ -289,6 +611,7 @@
                 style="
                     margin-top: 12px;
                     color: #666;
+                    line-height: 1.8;
                 "
             >
                 أدخل بياناتك وسنفتح لك واتساب برسالة جاهزة
@@ -298,10 +621,9 @@
         </div>
 
 
-        <form
-            onsubmit="sendSubscriptionToWhatsApp(event)"
-        >
+        <form onsubmit="sendSubscriptionToWhatsApp(event)">
 
+            {{-- Office Name --}}
             <div style="margin-bottom: 18px;">
 
                 <label
@@ -333,6 +655,7 @@
             </div>
 
 
+            {{-- Contact Name --}}
             <div style="margin-bottom: 18px;">
 
                 <label
@@ -363,7 +686,37 @@
 
             </div>
 
+             {{-- Email --}}
+<div style="margin-bottom: 18px;">
 
+    <label
+        for="whatsapp_email"
+        style="
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        "
+    >
+        البريد الإلكتروني
+    </label>
+
+    <input
+        type="email"
+        id="whatsapp_email"
+        required
+        maxlength="150"
+        placeholder="مثال: info@example.com"
+        style="
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+        "
+    >
+
+</div>
+            {{-- Phone --}}
             <div style="margin-bottom: 18px;">
 
                 <label
@@ -395,6 +748,7 @@
             </div>
 
 
+            {{-- Subscription Plan --}}
             <div style="margin-bottom: 18px;">
 
                 <label
@@ -420,26 +774,53 @@
                         background: #fff;
                     "
                 >
+
                     <option value="">
                         اختر الخطة
                     </option>
 
-                    <option value="الأساسية - $10 - حتى 3 وسطاء">
-                        الأساسية — $10 — حتى 3 وسطاء
-                    </option>
+                    @foreach($plans as $plan)
 
-                    <option value="المتقدمة - $30 - حتى 20 وسيطًا">
-                        المتقدمة — $30 — حتى 20 وسيطًا
-                    </option>
+                        <option
+                            value="{{ $plan->id }}"
+                            data-name="{{ $plan->name }}"
+                            data-price="{{ $plan->price }}"
+                            data-max-agents="{{ is_null($plan->max_agents) ? 'unlimited' : $plan->max_agents }}"
+                        >
+                            {{ $plan->name }}
 
-                    <option value="غير المحدودة - $100 - عدد غير محدود من الوسطاء">
-                        غير المحدودة — $100 — عدد غير محدود من الوسطاء
-                    </option>
+                            —
+
+                            @if((float) $plan->price <= 0)
+                                مجانية
+                            @else
+                                ${{ number_format((float) $plan->price, 2) }} / شهر
+                            @endif
+
+                            —
+
+                            @if(is_null($plan->max_agents))
+                                وسطاء غير محدودين
+                            @elseif((int) $plan->max_agents === 0)
+                                بدون وسطاء
+                            @elseif((int) $plan->max_agents === 1)
+                                وسيط واحد
+                            @elseif((int) $plan->max_agents === 2)
+                                وسيطان
+                            @else
+                                حتى {{ $plan->max_agents }} وسطاء
+                            @endif
+
+                        </option>
+
+                    @endforeach
+
                 </select>
 
             </div>
 
 
+            {{-- Additional Message --}}
             <div style="margin-bottom: 24px;">
 
                 <label
@@ -450,7 +831,8 @@
                         font-weight: 600;
                     "
                 >
-                    ملاحظات إضافية
+                   وصف الخدمات 
+
                     <span
                         style="
                             color: #888;
@@ -465,7 +847,7 @@
                     id="whatsapp_message"
                     rows="4"
                     maxlength="500"
-                    placeholder="اكتب أي معلومات أو استفسارات إضافية..."
+                    placeholder="اكتب  معلومات إضافية حول الاعمال"
                     style="
                         width: 100%;
                         padding: 12px 14px;
@@ -479,6 +861,7 @@
             </div>
 
 
+            {{-- Submit --}}
             <button
                 type="submit"
                 class="button button-primary"
@@ -499,8 +882,11 @@
 
 </div>
 
-
 </section>
+
+{{-- =========================================================
+Contact
+========================================================= --}}
 
 <section
     style="
@@ -509,7 +895,6 @@
     "
 >
     <div class="container">
-
 
     <h2>
         لديك أسئلة قبل الاشتراك؟
@@ -537,8 +922,11 @@
 
 </div>
 
-
 </section>
+
+{{-- =========================================================
+WhatsApp JavaScript
+========================================================= --}}
 
 <script>
     function sendSubscriptionToWhatsApp(event) {
@@ -559,16 +947,86 @@
             .value
             .trim();
 
-        const plan = document
-            .getElementById('whatsapp_plan')
-            .value;
+        const planSelect = document.getElementById('whatsapp_plan');
 
-        const message = document
+        const selectedOption =
+            planSelect.options[planSelect.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            alert('يرجى اختيار خطة الاشتراك.');
+            return;
+        }
+
+        const planId = selectedOption.value;
+
+        const planName =
+            selectedOption.dataset.name || '';
+
+        const planPrice =
+            parseFloat(selectedOption.dataset.price || '0');
+
+        const maxAgents =
+            selectedOption.dataset.maxAgents || '';
+
+        const additionalMessage = document
             .getElementById('whatsapp_message')
             .value
             .trim();
 
-        const whatsappMessage =
+
+        /*
+         * السعر
+         */
+        let priceText = 'مجانية';
+
+        if (planPrice > 0) {
+            priceText =
+                '$' + planPrice.toFixed(2) + ' / شهر';
+        }
+
+
+        /*
+         * عدد الوسطاء
+         */
+        let agentsText = 'بدون وسطاء';
+
+        if (maxAgents === 'unlimited') {
+
+            agentsText = 'وسطاء غير محدودين';
+
+        } else {
+
+            const agentsCount =
+                parseInt(maxAgents, 10);
+
+            if (!isNaN(agentsCount)) {
+
+                if (agentsCount === 0) {
+
+                    agentsText = 'بدون وسطاء';
+
+                } else if (agentsCount === 1) {
+
+                    agentsText = 'وسيط واحد';
+
+                } else if (agentsCount === 2) {
+
+                    agentsText = 'وسيطان';
+
+                } else {
+
+                    agentsText =
+                        'حتى ' + agentsCount + ' وسطاء';
+
+                }
+            }
+        }
+
+
+        /*
+         * رسالة واتساب
+         */
+        let whatsappMessage =
 `السلام عليكم،
 
 أرغب بالاشتراك في منصة SOWLFA.
@@ -576,16 +1034,40 @@
 اسم المكتب: ${officeName}
 اسم المسؤول: ${contactName}
 رقم الهاتف: ${phone}
-الخطة المطلوبة: ${plan}
-${message ? `وصف الحدمات: ${message}` : ''}
 
-يرجى تزويدي بتفاصيل الاشتراك وخطوات التفعيل.
+الخطة المطلوبة: ${planName}
+سعر الخطة: ${priceText}
+عدد الوسطاء: ${agentsText}
+معرف الخطة: ${planId}`;
+
+        if (additionalMessage) {
+
+            whatsappMessage +=
+                `\n\nملاحظات إضافية: ${additionalMessage}`;
+        }
+
+        whatsappMessage +=
+            `\n\nيرجى تزويدي بتفاصيل الاشتراك وخطوات التفعيل.
 
 شكرًا لكم.`;
 
+
+        /*
+         * رقم واتساب
+         *
+         * غيّر الرقم هنا إذا كان رقم استقبال الاشتراكات
+         * مختلفًا.
+         */
+        const whatsappNumber =
+            '963932224359';
+
+
         const whatsappUrl =
-            'https://wa.me/963932224359?text=' +
+            'https://wa.me/' +
+            whatsappNumber +
+            '?text=' +
             encodeURIComponent(whatsappMessage);
+
 
         window.open(
             whatsappUrl,

@@ -6,6 +6,10 @@ use App\Models\Office;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use App\Notifications\AccountActivationNotification;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AdminUserController extends Controller
 {
@@ -34,40 +38,43 @@ class AdminUserController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                'unique:users,email',
-            ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-            ],
-            'office_id' => [
-                'required',
-                'exists:offices,id',
-            ],
-        ]);
+{
+    $data = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => [
+            'required',
+            'email',
+            'max:255',
+            'unique:users,email',
+        ],
+        'office_id' => [
+            'required',
+            'exists:offices,id',
+        ],
+    ]);
 
-        User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'office_id' => $data['office_id'],
-            'role' => 'subscriber',
-        ]);
+    $user = User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => Hash::make(Str::random(64)),
+        'office_id' => $data['office_id'],
+        'role' => 'subscriber',
+        'email_verified_at' => null,
+    ]);
 
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'تم إنشاء حساب المشترك بنجاح.');
-    }
+    $token = Password::broker()->createToken($user);
 
+    $user->notify(
+        new AccountActivationNotification($token)
+    );
+
+    return redirect()
+        ->route('admin.users.index')
+        ->with(
+            'success',
+            'تم إنشاء حساب المشترك وإرسال رسالة التفعيل إلى بريده الإلكتروني.'
+        );
+}
     public function edit(User $user)
 {
     $offices = Office::where('status', 'active')
@@ -102,9 +109,15 @@ public function update(Request $request, User $user)
         ],
     ]);
 
+    $emailChanged = $user->email !== $data['email'];
+
     $user->name = $data['name'];
     $user->email = $data['email'];
     $user->office_id = $data['office_id'];
+
+    if ($emailChanged) {
+        $user->email_verified_at = null;
+    }
 
     if (! empty($data['password'])) {
         $user->password = Hash::make($data['password']);
@@ -112,11 +125,17 @@ public function update(Request $request, User $user)
 
     $user->save();
 
+    if ($emailChanged) {
+        event(new Registered($user));
+    }
+
     return redirect()
         ->route('admin.users.index')
-        ->with('success', 'تم تحديث بيانات المستخدم بنجاح.');
+        ->with('success', $emailChanged
+            ? 'تم تحديث بيانات المستخدم وإرسال رابط تحقق جديد إلى البريد الإلكتروني.'
+            : 'تم تحديث بيانات المستخدم بنجاح.'
+        );
 }
-
     public function updateStatus(
     Request $request,
     User $user

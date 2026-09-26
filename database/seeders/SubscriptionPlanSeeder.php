@@ -10,27 +10,30 @@ class SubscriptionPlanSeeder extends Seeder
     public function run(): void
     {
         SubscriptionPlan::updateOrCreate(
-            ['name' => 'الخطة الأساسية'],
+            ['id' => 1],
             [
-                'price' => 0,
-                'max_agents' => 1,
+                'name' => 'الأساسية',
+                'price' => 0.00,
+                'max_agents' => 0,
                 'status' => 'active',
             ]
         );
 
         SubscriptionPlan::updateOrCreate(
-            ['name' => 'الخطة الاحترافية'],
+            ['id' => 2],
             [
-                'price' => 49,
-                'max_agents' => 5,
+                'name' => 'المتقدمة',
+                'price' => 49.00,
+                'max_agents' => 10,
                 'status' => 'active',
             ]
         );
 
         SubscriptionPlan::updateOrCreate(
-            ['name' => 'الخطة المتقدمة'],
+            ['id' => 3],
             [
-                'price' => 99,
+                'name' => 'الذهبية',
+                'price' => 99.00,
                 'max_agents' => null,
                 'status' => 'active',
             ]

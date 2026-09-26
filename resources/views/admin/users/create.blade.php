@@ -58,6 +58,24 @@
         font-size: 15px;
     }
 
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+
+    .info-box {
+        background: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+        padding: 14px 16px;
+        border-radius: 9px;
+        margin-bottom: 22px;
+        line-height: 1.8;
+        font-size: 14px;
+    }
+
     .button {
         border: none;
         background: #222;
@@ -66,6 +84,10 @@
         border-radius: 8px;
         cursor: pointer;
         font-size: 15px;
+    }
+
+    .button:hover {
+        background: #111827;
     }
 
     .errors {
@@ -79,6 +101,13 @@
     .errors ul {
         margin: 0;
         padding-right: 20px;
+    }
+
+    .field-hint {
+        margin: 7px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
     }
 
 </style>
@@ -101,6 +130,12 @@
 
 
 <div class="card">
+
+    <div class="info-box">
+        بعد إنشاء الحساب، سيرسل SOWLFA رسالة إلى البريد الإلكتروني
+        للمستخدم تحتوي على رابط آمن لتفعيل الحساب وإنشاء كلمة المرور.
+    </div>
+
 
     @if($errors->any())
 
@@ -143,6 +178,7 @@
                 name="name"
                 value="{{ old('name') }}"
                 required
+                autocomplete="name"
             >
 
         </div>
@@ -160,39 +196,12 @@
                 name="email"
                 value="{{ old('email') }}"
                 required
+                autocomplete="email"
             >
 
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="password">
-                كلمة المرور
-            </label>
-
-            <input
-                type="password"
-                id="password"
-                name="password"
-                required
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="password_confirmation">
-                تأكيد كلمة المرور
-            </label>
-
-            <input
-                type="password"
-                id="password_confirmation"
-                name="password_confirmation"
-                required
-            >
+            <p class="field-hint">
+                سيتم إرسال رسالة إنشاء الحساب ورابط التفعيل إلى هذا البريد.
+            </p>
 
         </div>
 
@@ -233,7 +242,7 @@
             type="submit"
             class="button"
         >
-            إنشاء الحساب
+            إنشاء الحساب وإرسال رسالة التفعيل
         </button>
 
     </form>

@@ -7,6 +7,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Notifications\SubscriptionNotification;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminSubscriptionController extends Controller
 {
@@ -16,8 +17,8 @@ class AdminSubscriptionController extends Controller
             'office',
             'plan',
         ])
-        ->latest()
-        ->get();
+            ->latest()
+            ->get();
 
         return view(
             'admin.subscriptions.index',
@@ -44,10 +45,15 @@ class AdminSubscriptionController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'office_id' => ['required', 'exists:offices,id'],
+            'office_id' => [
+                'required',
+                Rule::exists('offices', 'id')
+                    ->where('status', 'active'),
+            ],
             'subscription_plan_id' => [
                 'required',
-                'exists:subscription_plans,id',
+                Rule::exists('subscription_plans', 'id')
+                    ->where('status', 'active'),
             ],
             'starts_at' => ['required', 'date'],
             'ends_at' => [
@@ -61,10 +67,10 @@ class AdminSubscriptionController extends Controller
             'office_id',
             $data['office_id']
         )
-        ->where('status', 'active')
-        ->whereDate('starts_at', '<=', $data['ends_at'])
-        ->whereDate('ends_at', '>=', $data['starts_at'])
-        ->exists();
+            ->where('status', 'active')
+            ->whereDate('starts_at', '<=', $data['ends_at'])
+            ->whereDate('ends_at', '>=', $data['starts_at'])
+            ->exists();
 
         if ($hasOverlappingSubscription) {
             return back()
@@ -84,8 +90,10 @@ class AdminSubscriptionController extends Controller
             ->with('success', 'تم إنشاء الاشتراك بنجاح.');
     }
 
-    public function updateStatus(Request $request, Subscription $subscription)
-    {
+    public function updateStatus(
+        Request $request,
+        Subscription $subscription
+    ) {
         $data = $request->validate([
             'status' => [
                 'required',
@@ -98,9 +106,9 @@ class AdminSubscriptionController extends Controller
                 'office_id',
                 $subscription->office_id
             )
-            ->where('status', 'active')
-            ->where('id', '!=', $subscription->id)
-            ->exists();
+                ->where('status', 'active')
+                ->where('id', '!=', $subscription->id)
+                ->exists();
 
             if ($hasAnotherActiveSubscription) {
                 return back()->withErrors([

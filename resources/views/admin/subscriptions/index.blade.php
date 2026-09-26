@@ -1,208 +1,194 @@
 @extends('admin.layouts.app')
 
-@section('title', 'الاشتراكات - SOWLFA')
+@section('title', 'إدارة الاشتراكات - SOWLFA')
 
 @section('content')
 
-<style>
-    .page-header {
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+<div class="admin-page">
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-    }
+<div class="admin-page-header"
+     style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
 
-    .page-header h1 {
-        margin: 0 0 8px;
-    }
+    <div>
+        <h1 class="admin-page-title">
+            إدارة الاشتراكات
+        </h1>
 
-    .page-header p {
-        margin: 0;
-        color: #666;
-    }
+        <p class="admin-page-description">
+            إدارة اشتراكات المكاتب وحالاتها وفتراتها.
+        </p>
+    </div>
 
-    .create-button {
-        display: inline-block;
-        background: #198754;
-        color: white;
-        text-decoration: none;
-        padding: 11px 16px;
-        border-radius: 8px;
-        white-space: nowrap;
-    }
-
-    .subscriptions {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .subscription {
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .subscription h2 {
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    .plan-name {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .detail {
-        margin: 10px 0;
-        color: #555;
-    }
-
-    .status {
-        margin-top: 15px;
-        font-weight: bold;
-    }
-
-    .active {
-        color: #166534;
-    }
-
-    .suspended {
-        color: #92400e;
-    }
-
-    .expired {
-        color: #991b1b;
-    }
-
-    .empty {
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        color: #666;
-        grid-column: 1 / -1;
-    }
-
-    @media (max-width: 800px) {
-        .subscriptions {
-            grid-template-columns: 1fr;
-        }
-
-        .page-header {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .create-button {
-            text-align: center;
-        }
-    }
-</style>
-
-<div class="page-header">
-
-```
-<div>
-
-    <h1>
-        الاشتراكات
-    </h1>
-
-    <p>
-        إدارة اشتراكات مكاتب SOWLFA.
-    </p>
+    <a
+        href="{{ route('admin.subscriptions.create') }}"
+        class="admin-button admin-button-primary"
+    >
+        + إنشاء اشتراك
+    </a>
 
 </div>
 
-<a
-    class="create-button"
-    href="{{ route('admin.subscriptions.create') }}"
->
-    + إنشاء اشتراك جديد
-</a>
+@if(session('success'))
+    <div class="admin-alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="admin-alert-error">
+        @foreach($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+    </div>
+@endif
+
+<div class="admin-table-wrapper">
+
+    <table class="admin-table">
+
+        <thead>
+            <tr>
+                <th>المكتب</th>
+                <th>الخطة</th>
+                <th>تاريخ البداية</th>
+                <th>تاريخ الانتهاء</th>
+                <th>الحالة</th>
+                <th>الإجراء</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @forelse($subscriptions as $subscription)
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ $subscription->office?->name ?? '—' }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ $subscription->plan?->name ?? '—' }}
+                    </td>
+
+                    <td>
+                        {{ $subscription->starts_at?->format('Y-m-d') ?? '—' }}
+                    </td>
+
+                    <td>
+                        {{ $subscription->ends_at?->format('Y-m-d') ?? '—' }}
+                    </td>
+
+                    <td>
+
+                        @if($subscription->status === 'active')
+
+                            <span class="admin-badge admin-badge-success">
+                                نشط
+                            </span>
+
+                        @elseif($subscription->status === 'suspended')
+
+                            <span
+                                class="admin-badge"
+                                style="background:#fef3c7;color:#92400e;"
+                            >
+                                موقوف
+                            </span>
+
+                        @elseif($subscription->status === 'expired')
+
+                            <span
+                                class="admin-badge"
+                                style="background:#fee2e2;color:#b91c1c;"
+                            >
+                                منتهي
+                            </span>
+
+                        @else
+
+                            <span class="admin-badge admin-badge-neutral">
+                                {{ $subscription->status }}
+                            </span>
+
+                        @endif
+
+                    </td>
+
+                    <td>
+
+                        <form
+                            method="POST"
+                            action="{{ route('admin.subscriptions.update-status', $subscription) }}"
+                            style="display:flex;align-items:center;gap:8px;min-width:190px;"
+                        >
+
+                            @csrf
+@method('PUT')
+
+                            <select
+                                name="status"
+                                class="form-select"
+                                style="height:40px;padding:8px 10px;"
+                            >
+                                <option
+                                    value="active"
+                                    @selected($subscription->status === 'active')
+                                >
+                                    نشط
+                                </option>
+
+                                <option
+                                    value="suspended"
+                                    @selected($subscription->status === 'suspended')
+                                >
+                                    موقوف
+                                </option>
+
+                                <option
+                                    value="expired"
+                                    @selected($subscription->status === 'expired')
+                                >
+                                    منتهي
+                                </option>
+                            </select>
+
+                            <button
+                                type="submit"
+                                class="admin-button admin-button-secondary"
+                                style="min-height:40px;padding:8px 12px;white-space:nowrap;"
+                            >
+                                تحديث
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            @empty
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="text-align:center;padding:40px 16px;color:#6b7280;"
+                    >
+                        لا توجد اشتراكات حاليًا.
+                    </td>
+
+                </tr>
+
+            @endforelse
+
+        </tbody>
+
+    </table>
 
 </div>
-
-<div class="subscriptions">
-
-@forelse ($subscriptions as $subscription)
-
-    <div class="subscription">
-
-        <h2>
-            {{ $subscription->office?->name ?? 'مكتب غير محدد' }}
-        </h2>
-
-        <div class="plan-name">
-
-            الخطة:
-            {{ $subscription->plan?->name ?? 'خطة غير محددة' }}
-
-        </div>
-
-        <div class="detail">
-
-            تاريخ البداية:
-            {{ $subscription->starts_at }}
-
-        </div>
-
-        <div class="detail">
-
-            تاريخ الانتهاء:
-            {{ $subscription->ends_at }}
-
-        </div>
-
-        <div class="status">
-
-            الحالة:
-
-            @if ($subscription->status === 'active')
-
-                <span class="active">
-                    نشط
-                </span>
-
-            @elseif ($subscription->status === 'suspended')
-
-                <span class="suspended">
-                    موقوف
-                </span>
-
-            @elseif ($subscription->status === 'expired')
-
-                <span class="expired">
-                    منتهي
-                </span>
-
-            @else
-
-                <span>
-                    {{ $subscription->status }}
-                </span>
-
-            @endif
-
-        </div>
-
-    </div>
-
-@empty
-
-    <div class="empty">
-        لا توجد اشتراكات حاليًا.
-    </div>
-
-@endforelse
 
 </div>
 

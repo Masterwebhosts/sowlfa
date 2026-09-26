@@ -43,20 +43,51 @@
         margin-bottom: 20px;
     }
 
-    label {
+    .field label {
         display: block;
         margin-bottom: 8px;
-        font-weight: bold;
+        font-weight: 700;
+        color: #1f2937;
     }
 
-    select,
-    input {
+    .field select,
+    .field input {
         width: 100%;
         box-sizing: border-box;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+        padding: 12px 14px;
+        min-height: 46px;
+        border: 1px solid #d1d5db;
+        border-radius: 9px;
         font-size: 15px;
+        color: #111827;
+        background: #fff;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .field select:focus,
+    .field input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .field-hint {
+        margin: 7px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .plan-select {
+        background: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    .plan-select:focus {
+        background: #fff !important;
+        border-color: #2563eb !important;
     }
 
     button {
@@ -67,6 +98,17 @@
         border-radius: 8px;
         cursor: pointer;
         font-size: 15px;
+        transition:
+            background 0.2s ease,
+            transform 0.15s ease;
+    }
+
+    button:hover {
+        background: #1f2937;
+    }
+
+    button:active {
+        transform: translateY(1px);
     }
 
     .error {
@@ -173,6 +215,7 @@
             <select
                 name="subscription_plan_id"
                 id="subscription_plan_id"
+                class="plan-select"
                 required
             >
 
@@ -187,15 +230,38 @@
                         @selected(old('subscription_plan_id') == $plan->id)
                     >
                         {{ $plan->name }} -
-                        ${{ number_format($plan->price, 2) }}
 
-                        @if ($plan->max_agents !== null)
+                        @if ((float) $plan->price <= 0)
 
-                            - حتى {{ $plan->max_agents }} وسطاء
+                            مجانية
 
                         @else
 
-                            - وسطاء غير محدودين
+                            ${{ number_format((float) $plan->price, 2) }} / شهر
+
+                        @endif
+
+                        -
+
+                        @if (is_null($plan->max_agents))
+
+                            وسطاء غير محدودين
+
+                        @elseif ((int) $plan->max_agents === 0)
+
+                            بدون وسطاء
+
+                        @elseif ((int) $plan->max_agents === 1)
+
+                            وسيط واحد
+
+                        @elseif ((int) $plan->max_agents === 2)
+
+                            وسيطان
+
+                        @else
+
+                            حتى {{ $plan->max_agents }} وسطاء
 
                         @endif
 
@@ -204,6 +270,10 @@
                 @endforeach
 
             </select>
+
+            <p class="field-hint">
+                اختر الخطة المناسبة للمكتب وفقًا للسعر والحد الأقصى للوسطاء.
+            </p>
 
         </div>
 
@@ -235,9 +305,13 @@
                 type="date"
                 name="ends_at"
                 id="ends_at"
-                value="{{ old('ends_at', now()->addDays(30)->toDateString()) }}"
+                value="{{ old('ends_at', now()->addMonth()->toDateString()) }}"
                 required
             >
+
+            <p class="field-hint">
+                مدة الاشتراك الافتراضية شهر واحد.
+            </p>
 
         </div>
 
