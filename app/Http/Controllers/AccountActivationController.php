@@ -34,14 +34,18 @@ class AccountActivationController extends Controller
                 'min:8',
                 'confirmed',
             ],
+            'password_confirmation' => [
+                'required',
+                'string',
+                'min:8',
+            ],
         ]);
 
         $status = Password::reset(
             [
                 'email' => $data['email'],
                 'password' => $data['password'],
-                'password_confirmation' =>
-                    $data['password_confirmation'],
+                'password_confirmation' => $data['password_confirmation'],
                 'token' => $data['token'],
             ],
             function ($user, $password) {
