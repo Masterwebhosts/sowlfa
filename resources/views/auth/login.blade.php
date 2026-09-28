@@ -62,16 +62,55 @@
         }
 
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="text"] {
             width: 100%;
             padding: 12px;
-
-            margin-bottom: 18px;
 
             border: 1px solid #ddd;
             border-radius: 8px;
 
             font-size: 16px;
+        }
+
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .password-wrapper input {
+            margin-bottom: 0;
+            padding-left: 48px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            width: 34px;
+            height: 34px;
+
+            padding: 0;
+            margin: 0;
+
+            border: 0;
+            background: transparent;
+
+            color: #666;
+
+            font-size: 18px;
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            background: transparent;
+            color: #111827;
         }
 
         .options {
@@ -115,34 +154,6 @@
             text-decoration: underline;
         }
 
-        .privacy {
-            display: flex;
-            align-items: flex-start;
-
-            gap: 8px;
-
-            margin-bottom: 20px;
-
-            font-size: 14px;
-            line-height: 1.6;
-
-            font-weight: normal;
-        }
-
-        .privacy input {
-            width: auto;
-            margin-top: 4px;
-
-            flex-shrink: 0;
-
-            cursor: pointer;
-        }
-
-        .privacy a {
-            color: #111827;
-            text-decoration: underline;
-        }
-
         button {
             width: 100%;
 
@@ -173,12 +184,16 @@
             border-radius: 8px;
         }
 
-        .privacy-error {
-            margin-top: -10px;
+        .success {
             margin-bottom: 18px;
 
-            color: #991b1b;
-            font-size: 14px;
+            padding: 12px;
+
+            background: #ecfdf5;
+            color: #047857;
+
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
         }
 
         @media (max-width: 480px) {
@@ -211,12 +226,18 @@
         تسجيل الدخول
     </p>
 
+    @if (session('success'))
+
+        <div class="success">
+            {{ session('success') }}
+        </div>
+
+    @endif
+
     @if ($errors->any())
 
         <div class="error">
-
             {{ $errors->first() }}
-
         </div>
 
     @endif
@@ -246,13 +267,27 @@
             كلمة المرور
         </label>
 
-        <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            autocomplete="current-password"
-        >
+        <div class="password-wrapper">
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                autocomplete="current-password"
+            >
+
+            <button
+                type="button"
+                id="togglePassword"
+                class="password-toggle"
+                aria-label="إظهار كلمة المرور"
+                title="إظهار كلمة المرور"
+            >
+                👁
+            </button>
+
+        </div>
 
         <div class="options">
 
@@ -276,39 +311,13 @@
             </label>
 
             <a
-             href="{{ route('password.request') }}"
-             class="forgot-password"
+                href="{{ route('password.request') }}"
+                class="forgot-password"
             >
-               نسيت كلمة المرور؟
+                نسيت كلمة المرور؟
             </a>
 
         </div>
-
-        <label
-            for="privacy"
-            class="privacy"
-        >
-
-            <input
-                type="checkbox"
-                id="privacy"
-                name="privacy"
-                value="1"
-                required
-            >
-
-            <span>
-
-                أوافق على
-                <a href="#">
-                    سياسة الخصوصية
-                </a>
-
-                وأقر بقراءة شروط استخدام SOWLFA.
-
-            </span>
-
-        </label>
 
         <button type="submit">
             تسجيل الدخول
@@ -317,6 +326,43 @@
     </form>
 
 </div>
+
+<script>
+
+    const passwordInput =
+        document.getElementById('password');
+
+    const togglePassword =
+        document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', function () {
+
+        const isHidden =
+            passwordInput.type === 'password';
+
+        passwordInput.type =
+            isHidden ? 'text' : 'password';
+
+        this.textContent =
+            isHidden ? '🙈' : '👁';
+
+        this.setAttribute(
+            'aria-label',
+            isHidden
+                ? 'إخفاء كلمة المرور'
+                : 'إظهار كلمة المرور'
+        );
+
+        this.setAttribute(
+            'title',
+            isHidden
+                ? 'إخفاء كلمة المرور'
+                : 'إظهار كلمة المرور'
+        );
+
+    });
+
+</script>
 
 </body>
 
