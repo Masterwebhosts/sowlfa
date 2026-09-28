@@ -66,6 +66,11 @@ class PasswordResetController extends Controller
                 'min:8',
                 'confirmed',
             ],
+            'password_confirmation' => [
+                'required',
+                'string',
+                'min:8',
+            ],
         ]);
 
         $status = Password::reset(
