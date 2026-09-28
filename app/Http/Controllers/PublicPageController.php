@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Office;
+use App\Models\SubscriptionPlan;
 
 class PublicPageController extends Controller
 {
@@ -23,12 +24,28 @@ class PublicPageController extends Controller
 
     public function pricing()
     {
-        return view('public.pricing');
+        $plans = SubscriptionPlan::query()
+            ->where('status', 'active')
+            ->orderBy('price', 'asc')
+            ->get();
+
+        return view(
+            'public.pricing',
+            compact('plans')
+        );
     }
 
     public function subscribe()
     {
-        return view('public.subscribe');
+        $plans = SubscriptionPlan::query()
+            ->where('status', 'active')
+            ->orderBy('price', 'asc')
+            ->get();
+
+        return view(
+            'public.subscribe',
+            compact('plans')
+        );
     }
 
     public function contact()
