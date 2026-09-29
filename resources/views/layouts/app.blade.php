@@ -15,9 +15,14 @@
     </title>
 
     <link
-        rel="icon"
-        href="{{ asset('favicon.ico') }}"
-        type="image/x-icon"
+    rel="icon"
+    href="{{ asset('favicon.ico') }}"
+    type="image/x-icon"
+    >
+
+    <link
+    rel="manifest"
+    href="{{ asset('manifest.webmanifest') }}"
     >
 
     <style>
@@ -535,5 +540,18 @@
 
 </body>
 
-</html>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('SOWLFA Service Worker registered:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('SOWLFA Service Worker registration failed:', error);
+                });
+        });
+    }
+</script>
 
+</html>

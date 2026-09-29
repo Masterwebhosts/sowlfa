@@ -63,8 +63,13 @@
     >
 
     <link
-        rel="icon"
-        href="{{ asset('favicon.ico') }}"
+    rel="icon"
+    href="{{ asset('favicon.ico') }}"
+    >
+
+    <link
+    rel="manifest"
+    href="{{ asset('manifest.webmanifest') }}"
     >
 
 
