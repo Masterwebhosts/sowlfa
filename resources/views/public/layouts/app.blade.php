@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -511,7 +510,6 @@ a {
 
 </footer>
 
-
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -525,8 +523,135 @@ a {
         });
     }
 </script>
+
+<div
+    id="install-app-notice"
+    style="
+        display: none;
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        z-index: 9999;
+        max-width: 420px;
+        margin: 0 auto;
+        padding: 16px;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 1px solid #e5e7eb;
+    "
+>
+    <div
+        style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        "
+    >
+        <img
+            src="/icons/icon-192.png"
+            alt="SOWLFA"
+            width="48"
+            height="48"
+            style="border-radius: 12px;"
+        >
+
+        <div style="flex: 1;">
+            <strong style="display: block; margin-bottom: 4px;">
+                📱 ثبّت تطبيق SOWLFA
+            </strong>
+
+            <span style="font-size: 14px; color: #6b7280;">
+                وصول أسرع وتجربة أفضل
+            </span>
+        </div>
+
+        <button
+            type="button"
+            id="install-app-button"
+            class="button button-primary"
+        >
+            تثبيت
+        </button>
+
+        <button
+            type="button"
+            id="close-install-notice"
+            aria-label="إغلاق"
+            style="
+                border: 0;
+                background: transparent;
+                font-size: 22px;
+                cursor: pointer;
+                color: #6b7280;
+                padding: 4px;
+            "
+        >
+            ×
+        </button>
+    </div>
+</div>
+
+<script>
+    let deferredInstallPrompt = null;
+
+    const installAppNotice = document.getElementById('install-app-notice');
+    const installAppButton = document.getElementById('install-app-button');
+    const closeInstallNotice = document.getElementById('close-install-notice');
+
+    const INSTALL_NOTICE_CLOSED_KEY = 'sowlfa_install_notice_closed';
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+
+        deferredInstallPrompt = event;
+
+        const noticeWasClosed =
+            sessionStorage.getItem(INSTALL_NOTICE_CLOSED_KEY) === '1';
+
+        if (!noticeWasClosed && installAppNotice) {
+            installAppNotice.style.display = 'block';
+        }
+    });
+
+    installAppButton?.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) {
+            return;
+        }
+
+        deferredInstallPrompt.prompt();
+
+        const { outcome } = await deferredInstallPrompt.userChoice;
+
+        console.log('SOWLFA install prompt:', outcome);
+
+        deferredInstallPrompt = null;
+
+        if (outcome === 'accepted' && installAppNotice) {
+            installAppNotice.style.display = 'none';
+        }
+    });
+
+    closeInstallNotice?.addEventListener('click', () => {
+        sessionStorage.setItem(INSTALL_NOTICE_CLOSED_KEY, '1');
+
+        if (installAppNotice) {
+            installAppNotice.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+
+        if (installAppNotice) {
+            installAppNotice.style.display = 'none';
+        }
+
+        console.log('SOWLFA installed successfully.');
+    });
+</script>
+
 </body>
 
 </html>
-
-
